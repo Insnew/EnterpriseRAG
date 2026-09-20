@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# 虚拟环境
+.venv/
+
+# 环境变量与密钥（.env 绝不入库，只提交 .env.example）
+.env
+.env.local
+
+# 数据与索引
+data/
+*.db
+*.sqlite3
+
+# 参考项目（M0 clone 的 GitHub 参考项目，仅本地研读）
+references/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 其他
+logs/
