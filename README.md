@@ -46,6 +46,13 @@ flowchart LR
 
 ## 快速开始
 
+> **Windows 小白模式（推荐）**：双击三个脚本即可——
+> ① `scripts\setup_env.bat`（自动创建 .env 并打开记事本，填入两个 key）
+> ② `scripts\ingest_docs.bat`（把 samples\ 演示文档摄入知识库）
+> ③ `scripts\dev_start.bat`（启动后端 + 网页界面）→ 浏览器打开 http://localhost:8501 提问
+
+命令行模式（同上，手动执行）：
+
 ```bash
 # 1. 安装依赖（uv，Python 3.12）
 uv sync
