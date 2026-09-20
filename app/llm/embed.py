@@ -17,6 +17,8 @@ def get_embeddings() -> OpenAIEmbeddings:
         model=settings.embedding_model,
         api_key=settings.siliconflow_api_key,
         base_url=settings.siliconflow_base_url,
-        # bge-m3 不在 tiktoken 词表内，禁用 tiktoken 计数避免报错
-        tiktoken_enabled=False,
+        # 关闭上下文长度检查：跳过本地分词器（1.x 会尝试加载 transformers
+        # 并从 HuggingFace 下载词表，国内网络不可用）。我们的 chunk ≤400 字，
+        # 远小于 BGE-M3 的 8192 token 上限，跳检安全。
+        check_embedding_ctx_length=False,
     )
