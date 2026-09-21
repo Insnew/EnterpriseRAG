@@ -1,0 +1,54 @@
+{"id": "Q001", "question": "研发中心上班可以弹性打卡吗？弹性时间是怎么规定的？", "golden_answer": "研发中心实行弹性工作制，弹性窗口为8:30—10:00上班、18:00—19:30下班，每日在岗时长不得少于8小时。", "golden_doc_ids": ["01-考勤管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q002", "question": "年假是怎么算的？入职满几年能休多少天？", "golden_answer": "入职满1年享5天，满5年享10天，满10年享15天，年假当年有效，可结转至次年3月31日。", "golden_doc_ids": ["01-考勤管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q003", "question": "公司职级薪酬体系里P4和P5的月薪区间分别是多少？", "golden_answer": "P4月薪区间为21000—30000元，P5月薪区间为31000—45000元。", "golden_doc_ids": ["02-薪酬管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q004", "question": "出差住宿费一线城市和其他城市的标准分别是多少？", "golden_answer": "P1—P3一线城市450元/晚、其他城市350元/晚；P4及以上一线城市700元/晚、其他城市550元/晚。", "golden_doc_ids": ["03-差旅报销管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q005", "question": "我旷工一天会被扣多少钱？这个扣款标准在哪个制度里规定的？", "golden_answer": "旷工扣款为当日工资的200%，该标准在《考勤管理制度》第十一条规定。", "golden_doc_ids": ["01-考勤管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q006", "question": "迟到早退的扣款是怎么算的，最后怎么在工资里体现？", "golden_answer": "月累计迟到3次以内每次扣20元，超过3次的部分每次扣50元，早退处理标准同迟到，扣款由OA考勤系统自动计算并在当月工资中扣除。", "golden_doc_ids": ["01-考勤管理制度.md", "02-薪酬管理制度.md"], "category": "cross_doc", "expect_refusal": false}
+{"id": "Q007", "question": "公司有食堂吗？员工宿舍怎么申请？", "golden_answer": "公司无食堂，每月发放餐补600元；公司不提供员工宿舍，入职满2年可申请住房补贴每月1000元。", "golden_doc_ids": ["05-员工手册.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q008", "question": "公司有班车吗？上下班接送路线是怎么安排的？", "golden_answer": "知识库中无相关信息", "golden_doc_ids": [], "category": "refusal", "expect_refusal": true}
+{"id": "Q009", "question": "内推一个P3岗位的人，等他过了试用期我能拿多少奖金？", "golden_answer": "P3岗位内推奖励为6000元，随次月工资发放。", "golden_doc_ids": ["04-招聘管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q010", "question": "从简历初筛到发Offer一般要多久？", "golden_answer": "标准周期为15个工作日。", "golden_doc_ids": ["04-招聘管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q011", "question": "入职当天要带哪些材料？", "golden_answer": "身份证原件及复印件、学历学位证书原件、离职证明、银行卡复印件、体检报告（二级甲等以上医院，3个月内有效）。", "golden_doc_ids": ["08-FAQ-新员工常见问题.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q012", "question": "内推奖金P1/P2、P3、P4及以上分别是多少钱？", "golden_answer": "P1/P2岗位3000元，P3岗位6000元，P4及以上岗位10000元。", "golden_doc_ids": ["04-招聘管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q013", "question": "公司每月餐补多少？住房补贴多少？停车月租多少？", "golden_answer": "餐补每月600元，住房补贴每月1000元（入职满2年可申请），停车月租400元/车位。", "golden_doc_ids": ["05-员工手册.md"], "category": "table", "expect_refusal": false}
+{"id": "Q014", "question": "试用期工资是转正工资的百分之多少？竞业限制补偿是月平均工资的百分之多少？", "golden_answer": "试用期工资为转正工资的80%，竞业限制补偿为离职前月平均工资的30%。", "golden_doc_ids": ["08-FAQ-新员工常见问题.md", "05-员工手册.md"], "category": "table", "expect_refusal": false}
+{"id": "Q015", "question": "公司员工停车怎么收费？车位紧张吗？", "golden_answer": "园区地下停车场对员工开放，月租400元/车位，先到先得。", "golden_doc_ids": ["05-员工手册.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q016", "question": "公司提供免费早餐吗？早餐几点开始供应？", "golden_answer": "知识库中无相关信息", "golden_doc_ids": [], "category": "refusal", "expect_refusal": true}
+{"id": "Q017", "question": "公司有年度体检福利吗？体检套餐包含哪些项目？", "golden_answer": "知识库中无相关信息", "golden_doc_ids": [], "category": "refusal", "expect_refusal": true}
+{"id": "Q018", "question": "星火OA系统支持哪几种打卡方式？", "golden_answer": "支持GPS打卡、Wi-Fi打卡、蓝牙打卡三种方式。", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q019", "question": "星火CRM的销售漏斗默认有几个阶段？", "golden_answer": "默认七个阶段：初步接洽→需求确认→方案演示→报价→商务谈判→合同评审→赢单。", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q020", "question": "星火OA的企业版一年多少钱？包含多少存储空间？", "golden_answer": "企业版30000元/年，包含100GB存储。", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "table", "expect_refusal": false}
+{"id": "Q021", "question": "星火CRM专业版的价格和适用席位数是多少？", "golden_answer": "专业版20000元/年，适用100—500席。", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "table", "expect_refusal": false}
+{"id": "Q022", "question": "星火OA旗舰版除了私有化部署，还比企业版多什么服务？价格是多少？", "golden_answer": "旗舰版80000元/年，比企业版多私有化部署和专属客户成功经理。", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q023", "question": "星火CRM的免费创业版能不能对接自研系统？为什么？", "golden_answer": "不能，因为免费创业版不含API开放平台，对接自研系统需购买成长版及以上。", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q024", "question": "星火OA私有化部署的最低服务器配置要求是什么？", "golden_answer": "最低配置要求为8核CPU、16GB内存、500GB SSD。", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "table", "expect_refusal": false}
+{"id": "Q025", "question": "星火CRM各版本的每日导出上限分别是多少？", "golden_answer": "创业版1000条、成长版10000条、专业版及以上不限。", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "table", "expect_refusal": false}
+{"id": "Q026", "question": "星火OA标准版及以上支持哪些第三方平台集成？", "golden_answer": "标准版及以上支持企业微信、钉钉、飞书三端集成。", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q027", "question": "星火CRM和星火OA之间的数据是怎么互通的？需要什么条件？", "golden_answer": "CRM与OA的客户档案、合同审批数据双向同步，需在两边同时开通“数据互通”开关。", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q028", "question": "新员工入职培训是几点开始，要培训多长时间啊？", "golden_answer": "入职当天9:30开始，时长2小时。", "golden_doc_ids": ["09-培训管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q029", "question": "公司VPN账号哪些岗位能开通？开通前有什么要求？", "golden_answer": "VPN账号仅研发与运维岗位开通，开通前须通过信息安全考试（90分及格）。", "golden_doc_ids": ["10-信息安全管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q030", "question": "P4职级的员工每年外部培训额度是多少钱？", "golden_answer": "P4职级年度外部培训额度为15000元。", "golden_doc_ids": ["09-培训管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q031", "question": "绩效考核里S、A、B、C这几个等级的绩效奖金系数分别是多少？", "golden_answer": "S为1.5，A为1.2，B为0.8，C为0.5。", "golden_doc_ids": ["11-绩效考核制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q032", "question": "公司数据分几级？机密级数据在传输上有什么要求？", "golden_answer": "公司数据分为公开、内部、机密、绝密四级，机密级数据须加密传输并经过权限审批。", "golden_doc_ids": ["10-信息安全管理制度.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q033", "question": "新员工在试用期由谁带教，带教导师有什么津贴，另外试用期员工怎么考核？", "golden_answer": "新员工试用期内由直属主管指定带教导师，带教津贴为300元/月；试用期员工按月度考核。", "golden_doc_ids": ["09-培训管理制度.md", "11-绩效考核制度.md"], "category": "cross_doc", "expect_refusal": false}
+{"id": "Q034", "question": "员工每周可以在家远程办公几天？远程办公需要申请吗？", "golden_answer": "知识库中无相关信息", "golden_doc_ids": [], "category": "refusal", "expect_refusal": true}
+{"id": "Q035", "question": "员工每月有几天带薪病假？怎么申请？", "golden_answer": "每月1天以内（含）凭三甲医院证明不扣工资，超过部分按日工资的60%计发；请假须提前1个工作日在OA提交申请。", "golden_doc_ids": ["01-考勤管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q036", "question": "新来的研发同事配的电脑是什么型号？内存和硬盘多大？", "golden_answer": "研发岗配联想 ThinkPad T 系列，16GB 内存 / 512GB SSD，预装 Windows 11。", "golden_doc_ids": ["12-办公设备管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q037", "question": "公司设备不小心弄丢了，要赔多少钱？", "golden_answer": "须 24 小时内报告行政部并报警，责任人按设备残值的 50% 赔偿；因公遗失且有报案回执与说明的免赔。", "golden_doc_ids": ["12-办公设备管理制度.md"], "category": "fact", "expect_refusal": false}
+{"id": "Q038", "question": "公司手机卡每月套餐费是多少？超了怎么办？", "golden_answer": "公司手机卡套餐月费 99 元，超额部分自理。", "golden_doc_ids": ["12-办公设备管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q039", "question": "报告厅能坐多少人，要提前几天预订？", "golden_answer": "报告厅容量 100 人，须提前 3 天预订。", "golden_doc_ids": ["14-会议管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q040", "question": "公司公章和合同专用章分别由谁保管、放在哪？", "golden_answer": "公司公章由行政部保管，存放于总部保险柜（双人双锁）；合同专用章由法务部保管，存放于总部保险柜。", "golden_doc_ids": ["13-印章证照管理制度.md"], "category": "table", "expect_refusal": false}
+{"id": "Q041", "question": "研发岗电脑用几年可以换新？换下来的旧机器怎么处理？", "golden_answer": "研发岗电脑更换周期为 3 年，到龄可申请换新，旧机由行政部统一回收。", "golden_doc_ids": ["12-办公设备管理制度.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q042", "question": "发生火灾时怎么报警，疏散时要注意什么？", "golden_answer": "发现火情立即按下就近火警按钮、拨打 119 并通知前台（分机 8001）；疏散要求走楼梯、禁乘电梯、低姿前进，由楼层疏散引导员清点人数。", "golden_doc_ids": ["15-突发事件应急预案.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q043", "question": "用印的完整流程是什么？合同用印还需要额外附什么材料？", "golden_answer": "用印一律走 OA 审批：申请人提交用印申请（注明文件名称、份数、用途）→ 部门负责人审批 → 用印类别对应保管部门核验 → 用印；合同用印须附法务审核意见。", "golden_doc_ids": ["13-印章证照管理制度.md"], "category": "multi_hop", "expect_refusal": false}
+{"id": "Q044", "question": "我旷工一天的话工资怎么扣？这个扣款规则在薪酬制度里是怎么说的？", "golden_answer": "旷工扣款为当日工资的200%，薪酬制度第四章第八条明确按考勤管理制度第十一条执行。", "golden_doc_ids": ["01-考勤管理制度.md", "02-薪酬管理制度.md"], "category": "cross_doc", "expect_refusal": false}
+{"id": "Q045", "question": "我连续两个季度绩效拿了B+，想申请晋升，具体按哪个制度的哪一条走？", "golden_answer": "连续两个季度绩效B+及以上可申请晋升一个职级，依据绩效考核制度第八条，具体晋升规则见薪酬管理制度第二章第五条。", "golden_doc_ids": ["11-绩效考核制度.md", "02-薪酬管理制度.md"], "category": "cross_doc", "expect_refusal": false}
+{"id": "Q046", "question": "公司要是发生数据泄露，报告流程是怎么规定的？跟信息安全制度怎么衔接？", "golden_answer": "发生数据泄露须立即断开受影响设备网络并在1小时内报告信息安全邮箱，处置流程按信息安全管理制度第五章执行，涉及客户信息的还须24小时内评估是否触发个人信息保护法报告义务。", "golden_doc_ids": ["15-突发事件应急预案.md", "10-信息安全管理制度.md"], "category": "cross_doc", "expect_refusal": false}
+{"id": "Q047", "question": "制度编号 XH-HR-2026-002 是哪份制度？", "golden_answer": "星火科技薪酬管理制度", "golden_doc_ids": ["02-薪酬管理制度.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q048", "question": "差旅报销单号的格式是什么样的？", "golden_answer": "XH-TR-年份-四位流水号，如 XH-TR-2026-0001", "golden_doc_ids": ["03-差旅报销管理制度.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q049", "question": "星火 OA 办公系统的产品型号是什么？", "golden_answer": "XH-OA-Pro 2026", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q050", "question": "编号 XH-AD-2026-002 对应的是哪个制度？", "golden_answer": "星火科技印章证照管理制度", "golden_doc_ids": ["13-印章证照管理制度.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q051", "question": "公司开增值税专用发票的税号是多少？", "golden_answer": "91110108MA01XXXXXX", "golden_doc_ids": ["03-差旅报销管理制度.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q052", "question": "公司产品的售后热线电话是多少？服务时间是几点到几点？", "golden_answer": "400-800-1234，工作日9:00—18:00", "golden_doc_ids": ["06-产品手册-星火OA系统.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q053", "question": "星火 CRM 客户管理系统的产品型号是什么？", "golden_answer": "XH-CRM-S3", "golden_doc_ids": ["07-产品手册-星火CRM系统.md"], "category": "exact", "expect_refusal": false}
+{"id": "Q054", "question": "会议室金星厅能坐多少人？", "golden_answer": "10 人", "golden_doc_ids": ["14-会议管理制度.md"], "category": "exact", "expect_refusal": false}
