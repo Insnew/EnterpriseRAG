@@ -1,0 +1,28 @@
+# 持续集成：每次 push / PR 在 GitHub 云端跑代码规范检查 + 离线单元测试。
+# 测试全部使用 fake 模型，不依赖任何外部 API，无需 Secrets。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 uv 与 Python 3.12
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装依赖（按 uv.lock 精确锁定）
+        run: uv sync --locked
+
+      - name: 代码规范检查（ruff）
+        run: uv run ruff check .
+
+      - name: 单元测试（pytest，离线）
+        run: uv run pytest -q

@@ -17,8 +17,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.core.logging import setup_logging  # noqa: E402
-from app.llm.chat import get_chat_model  # noqa: E402
+from app.core.logging import setup_logging
+from app.llm.chat import get_chat_model
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ def parse_json_array(text: str) -> list[dict]:
         raise ValueError(f"未找到 JSON 数组: {text[:200]}")
     data = json.loads(match.group())
     if not isinstance(data, list):
-        raise ValueError("输出不是数组")
+        raise TypeError("输出不是数组")
     return data
 
 

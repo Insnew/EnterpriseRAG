@@ -17,8 +17,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.core.logging import setup_logging  # noqa: E402
-from app.storage.vector_store import search  # noqa: E402
+from app.storage.vector_store import search
 
 DATASET = PROJECT_ROOT / "eval" / "dataset" / "questions.jsonl"
 KB_ID = "eval"

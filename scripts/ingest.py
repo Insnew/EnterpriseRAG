@@ -12,8 +12,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.core.logging import setup_logging  # noqa: E402
-from app.ingestion.pipeline import ingest_path  # noqa: E402
+from app.core.logging import setup_logging
+from app.ingestion.pipeline import ingest_path
 
 setup_logging()
 
