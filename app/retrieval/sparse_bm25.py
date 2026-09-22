@@ -22,6 +22,9 @@ from pathlib import Path
 
 import jieba
 
+# jieba 初始化日志走 print 而非 logging，压不住，用官方开关静音
+jieba.setLogLevel(60)
+
 K1 = 1.5  # 词频饱和参数
 B = 0.75  # 长度归一参数
 

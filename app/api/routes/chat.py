@@ -1,59 +1,58 @@
-"""问答接口：M1 最简 LCEL 管道（非流式），M4 升级为 LangGraph 编排 + SSE 流式。
+"""问答接口：M4 起接入 LangGraph 管线，SSE 流式返回。
 
-设计说明：prompt 要求 [1][2] 格式引用，M1 就先埋好引用溯源的结构，
-避免后续大改——citations 与上下文顺序一一对应。
+事件序列（前端按 event 类型分别处理）：
+    event: meta      {"trace_id": "..."}     # 元信息（M7 可观测用）
+    event: token     {"text": "旷"}          # 答案逐字
+    event: citations {"citations": [...]}    # 引用来源
+    event: done      {}                      # 正常结束
+    event: error     {"message": "..."}      # 出错
+
+协议细节：SSE = 服务器单向推送的 HTTP 长连接；响应头加
+Cache-Control: no-cache 防止代理缓冲导致流式失效。
 """
 
-from fastapi import APIRouter
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+import json
+import logging
+import uuid
 
-from app.api.schemas import ChatRequest, ChatResponse, Citation
-from app.llm.chat import get_chat_model
-from app.storage.vector_store import search
+from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
+
+from app.api.schemas import ChatRequest
+from app.rag.graph import build_graph
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["chat"])
 
-RAG_PROMPT = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            (
-                "你是一名严谨的企业知识库助手。只依据提供的上下文回答问题，"
-                "上下文不足以回答时明确说“知识库中未找到相关内容”。"
-                "回答时用 [1][2] 格式标注引用来源。\n\n上下文：\n{context}"
-            ),
-        ),
-        ("human", "{question}"),
-    ]
-)
+
+def _sse(event: str, data: dict) -> str:
+    """按 SSE 协议打包一条事件：event 行 + data 行 + 空行分隔。"""
+    return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
-def _format_docs(docs) -> str:
-    return "\n\n".join(f"[{i}] {doc.page_content}" for i, doc in enumerate(docs, start=1))
+@router.post("/api/v1/chat")
+async def chat(req: ChatRequest) -> StreamingResponse:
+    """流式问答：跑 LangGraph 管线，把 token/引用/结束事件逐个推给前端。"""
+    trace_id = uuid.uuid4().hex[:12]
+    history = [m.model_dump() for m in req.history]
 
+    async def event_stream():
+        yield _sse("meta", {"trace_id": trace_id})
+        try:
+            graph = build_graph()
+            async for update in graph.astream(
+                {"kb_id": req.kb_id, "question": req.question, "history": history},
+                stream_mode="custom",  # 只接收节点内 writer() 推送的自定义事件
+            ):
+                yield _sse(update["event"], update)
+        except Exception as exc:  # 异常也以 SSE 事件返回，前端能显示错误而非挂死
+            logger.exception("问答失败")
+            yield _sse("error", {"message": str(exc)})
+        yield _sse("done", {})
 
-def _build_citations(docs) -> list[Citation]:
-    return [
-        Citation(
-            index=i,
-            file_name=doc.metadata.get("file_name", "unknown"),
-            page=doc.metadata.get("page"),
-            snippet=doc.page_content[:100],
-        )
-        for i, doc in enumerate(docs, start=1)
-    ]
-
-
-@router.post("/api/v1/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest) -> ChatResponse:
-    docs = search(req.kb_id, req.question)
-    chain = RAG_PROMPT | get_chat_model() | StrOutputParser()
-    answer = await chain.ainvoke(
-        {"context": _format_docs(docs), "question": req.question}
-    )
-    return ChatResponse(
-        answer=answer,
-        citations=_build_citations(docs),
-        kb_id=req.kb_id,
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
