@@ -15,5 +15,5 @@ def setup_logging(level: int = logging.INFO) -> None:
     root.addHandler(handler)
     root.setLevel(level)
     # 第三方库日志噪音大，统一压到 WARNING
-    for noisy in ("httpx", "httpcore", "chromadb", "uvicorn.access"):
+    for noisy in ("httpx", "httpcore", "chromadb", "uvicorn.access", "jieba"):
         logging.getLogger(noisy).setLevel(logging.WARNING)

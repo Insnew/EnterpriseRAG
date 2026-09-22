@@ -19,6 +19,8 @@ dependencies = [
     "pydantic-settings>=2.7",
     # 文档解析
     "pymupdf>=1.25",
+    "langchain-qdrant==1.1.0",
+    "jieba>=0.42.1",
 ]
 
 [dependency-groups]

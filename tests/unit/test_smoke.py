@@ -13,7 +13,6 @@ from langchain_openai import OpenAIEmbeddings
 from app.core.config import Settings
 from app.ingestion import splitter
 from app.ingestion.loader import load_file
-from app.storage.vector_store import get_vector_store
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SAMPLE_DOC = PROJECT_ROOT / "samples" / "示例-星火科技考勤管理制度.md"
@@ -28,6 +27,7 @@ def test_settings_defaults():
     assert s.chat_model == "deepseek-chat"
     assert s.embedding_model == "BAAI/bge-m3"
     assert s.retrieval_top_k == 4
+    assert s.qdrant_url == "http://localhost:6333"
 
 
 def test_chat_model_factory():
@@ -83,12 +83,15 @@ def test_splitter_on_sample():
     assert all(len(c.page_content) <= 500 for c in chunks)
 
 
-def test_vector_store_constructs(tmp_path, monkeypatch):
+def test_vector_store_requires_bm25_vocab(monkeypatch):
+    """M3 起向量库是 Qdrant 混合检索：未 ingest 的知识库应给出明确报错（离线可测）。"""
     monkeypatch.setenv("SILICONFLOW_API_KEY", "sk-dummy")
-    monkeypatch.setenv("CHROMA_DIR", str(tmp_path))
-    monkeypatch.setenv("ANONYMIZED_TELEMETRY", "False")
-    store = get_vector_store("test_kb")
-    assert store._collection.name == "kb_test_kb"
+    import pytest
+
+    from app.storage.vector_store import _load_sparse
+
+    with pytest.raises(RuntimeError, match="请先运行 ingest"):
+        _load_sparse("nonexistent_kb_xyz")
 
 
 def test_health_endpoint():

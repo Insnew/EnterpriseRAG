@@ -1,0 +1,20 @@
+# 本地基础设施编排（M3：仅 Qdrant；M7 将加入 Postgres 与 Langfuse）
+# 用法：docker compose up -d
+services:
+  qdrant:
+    # 国内直连 Docker Hub 不稳定，走镜像加速站前缀（docker.1panel.live）
+    image: docker.1panel.live/qdrant/qdrant:v1.19
+    container_name: enterprise-rag-qdrant
+    ports:
+      - "6333:6333" # HTTP API（Python 客户端走这个）
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      # Qdrant 镜像内无 curl，用 bash 的 /dev/tcp 探测端口
+      test: ["CMD", "bash", "-c", ":> /dev/tcp/127.0.0.1/6333 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  qdrant_data:

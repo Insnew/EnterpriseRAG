@@ -29,6 +29,7 @@ class Settings(BaseSettings):
 
     # 存储
     chroma_dir: str = "./data/chroma"
+    qdrant_url: str = "http://localhost:6333"
 
     # 检索
     retrieval_top_k: int = 4
