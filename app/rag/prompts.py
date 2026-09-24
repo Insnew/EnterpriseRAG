@@ -17,6 +17,20 @@ RAG_PROMPT = ChatPromptTemplate.from_messages(
     ]
 )
 
+# 相关性判断 prompt：检索结果能否回答用户问题，只输出 yes/no（拒答闸门）
+JUDGE_PROMPT = """你是一名严格的知识库相关性判断员。
+
+请判断下面的检索结果能否回答用户的问题：
+- 能回答（内容相关且信息足够）：只输出 yes
+- 不能回答（内容不相关或信息不足）：只输出 no
+禁止输出任何其他内容、标点或解释。
+
+用户问题：{question}
+
+检索结果：
+{context}
+"""
+
 # 查询改写 prompt：把多轮对话中的指代问题补全成独立完整的问题
 REWRITE_PROMPT = """你是企业知识库问答系统的查询改写器。
 

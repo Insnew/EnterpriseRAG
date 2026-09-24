@@ -14,6 +14,8 @@ class GraphState(TypedDict):
     question: str                       # 用户原始问题（生成答案时用它，而非改写句）
     history: NotRequired[list[dict]]    # 最近几轮对话 [{"role":..., "content":...}]
     rewritten_question: NotRequired[str]  # 改写后的独立问题（检索用它）
-    docs: NotRequired[list[Document]]   # 混合检索结果
+    docs: NotRequired[list[Document]]   # 粗召回结果（M5 起放宽到 Top-20）
+    reranked_docs: NotRequired[list[Document]]  # 重排截断后的最终上下文（M5 新增，Top-3~5）
+    judge_result: NotRequired[str]  # "yes"/"no"：条件边据此分流生成或拒答（M5 新增）
     answer: NotRequired[str]            # 最终答案
     citations: NotRequired[list[dict]]  # 引用来源（file_name/page/snippet）

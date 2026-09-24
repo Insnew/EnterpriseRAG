@@ -34,13 +34,8 @@ def load_questions(limit: int | None = None) -> list[dict]:
     return lines[:limit] if limit else lines
 
 
-def score_one(item: dict, top_k: int) -> tuple[bool, float] | None:
-    """跑一道题：检索 top_k 个 chunk，比对 file_name。
-
-    返回 (hit, reciprocal_rank)；refusal 题返回 None（本阶段不评）。
-    """
-    if item["expect_refusal"]:
-        return None
+def score_one(item: dict, top_k: int) -> tuple[bool, float]:
+    """跑一道普通题：检索 top_k 个 chunk，比对 file_name。"""
     docs = search(KB_ID, item["question"], k=top_k)
     names = [d.metadata.get("file_name", "") for d in docs]
     # 首个命中 golden 的位置（从 1 开始）；没命中 = 0
@@ -51,6 +46,24 @@ def score_one(item: dict, top_k: int) -> tuple[bool, float] | None:
     hit = first_pos > 0
     rr = 1.0 / first_pos if hit else 0.0  # 倒数排名：第1位=1，第2位=0.5...
     return hit, rr
+
+
+async def _score_refusal_one(item: dict) -> bool:
+    """refusal 题（M5 起启用）：跑完整图，judge 判定 no（走了拒答分支）即正确。
+
+    拒答能力在图里（judge 节点），所以必须端到端评测而非只调 search()。
+    """
+    from app.rag.graph import build_graph
+
+    result = await build_graph().ainvoke({"kb_id": KB_ID, "question": item["question"]})
+    return result.get("judge_result") == "no"
+
+
+async def _score_all_refusal(items: list[dict]) -> list[bool]:
+    """并发跑全部 refusal 题（每题一次完整图，3-4 次 LLM 调用）。"""
+    import asyncio
+
+    return list(await asyncio.gather(*[_score_refusal_one(x) for x in items]))
 
 
 def summarize(results: list[tuple[str, bool, float]]) -> dict:
@@ -70,16 +83,19 @@ def summarize(results: list[tuple[str, bool, float]]) -> dict:
 
 def run(top_k: int = DEFAULT_TOP_K, limit: int | None = None) -> None:
     items = load_questions(limit)
-    results: list[tuple[str, bool, float]] = []
-    n_refusal = 0
+    normal = [x for x in items if not x["expect_refusal"]]
+    refusal = [x for x in items if x["expect_refusal"]]
 
-    for item in items:
-        outcome = score_one(item, top_k)
-        if outcome is None:
-            n_refusal += 1
-            continue
-        hit, rr = outcome
+    results: list[tuple[str, bool, float]] = []
+    for item in normal:
+        hit, rr = score_one(item, top_k)
         results.append((item["category"], hit, rr))
+
+    # refusal 题走图评测（judge 拒答），与检索指标分开统计
+    import asyncio
+
+    refusal_ok = asyncio.run(_score_all_refusal(refusal)) if refusal else []
+    refusal_acc = sum(refusal_ok) / len(refusal_ok) if refusal_ok else None
 
     report = summarize(results)
     total = len(results)
@@ -88,13 +104,15 @@ def run(top_k: int = DEFAULT_TOP_K, limit: int | None = None) -> None:
 
     # ===== 输出报告 =====
     print("\n========== 检索质量评测报告 ==========")
-    print(f"评测集: {len(items)} 题 | 参与计分: {total} 题 | refusal 暂缓: {n_refusal} 题 | top_k={top_k}")
+    print(f"评测集: {len(items)} 题 | 检索计分: {total} 题 | refusal: {len(refusal)} 题 | top_k={top_k}")
     print(f"{'题型':<12}{'题数':>6}{'Recall@5':>10}{'MRR':>10}")
     print("-" * 40)
     for category, m in sorted(report.items()):
         print(f"{category:<12}{m['n']:>6}{m['recall@5']:>10.3f}{m['mrr']:>10.3f}")
     print("-" * 40)
     print(f"{'总体':<12}{total:>6}{overall_recall:>10.3f}{overall_mrr:>10.3f}")
+    if refusal_acc is not None:
+        print(f"{'refusal 拒答':<12}{len(refusal):>6}{refusal_acc:>10.3f}{'':>10}")
     print("======================================")
 
 
