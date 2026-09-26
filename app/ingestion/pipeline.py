@@ -1,20 +1,26 @@
-"""摄取编排：加载 → 切分 → 全量重建向量库（M3 起 Qdrant 混合检索）。
+"""摄取编排（M6 版）：加载 → 元数据增强 → 父文档入库 → 切分 → 上下文生成 → 重建。
 
-M3 简化决策：每次 ingest 视为全量重建——BM25 词表需要在全量语料上训练，
-先收集全部 chunk 再一次性 rebuild，词表与索引始终一致。
-增量更新在 M7 引入。
+数据流（每个文件）：
+    loader.load_file          → 页/篇级 Document
+    metadata.enrich_metadata  → Markdown 节级切分 + updated_at
+    docstore.save_parents     → 父文档入库，分配 parent_id
+    splitter.split_documents  → 子 chunk（parent_id 自动继承；表格短路）
+    contextual.add_context    → 每个子 chunk 生成前置上下文
+最终：clear_kb + rebuild（Qdrant 与 docstore 同步全量重建）
 """
 
+import asyncio
 import logging
 from pathlib import Path
 
-from app.ingestion import loader, splitter
+from app.ingestion import contextual, loader, metadata, splitter
+from app.storage import docstore
 from app.storage.vector_store import rebuild
 
 logger = logging.getLogger(__name__)
 
 
-def ingest_path(kb_id: str, path: Path) -> int:
+async def ingest_path(kb_id: str, path: Path) -> int:
     """摄入一个文件或目录，全量重建该知识库，返回写入的 chunk 总数。"""
     files = [path] if path.is_file() else sorted(p for p in path.rglob("*") if p.is_file())
 
@@ -28,17 +34,27 @@ def ingest_path(kb_id: str, path: Path) -> int:
         except loader.UnsupportedFileTypeError as exc:
             logger.warning("加载失败 %s: %s", file.name, exc)
             continue
-        chunks = splitter.split_documents(docs)
-        # kb_id 写进每个 chunk 的 metadata：collection 隔离之外的又一道过滤保障
+
+        docs = metadata.enrich_metadata(docs, file)          # 节级切分 + updated_at
+        parents = docstore.save_parents(kb_id, docs)          # 父文档入库，得 parent_id
+        chunks = splitter.split_documents(parents)            # parent_id 自动继承
+        chunks = await contextual.add_context_to_chunks(chunks)  # 前置上下文
         for chunk in chunks:
             chunk.metadata["kb_id"] = kb_id
         all_chunks.extend(chunks)
-        logger.info("已切分 %s：%d 个 chunk", file.name, len(chunks))
+        logger.info("已处理 %s：%d 个子 chunk", file.name, len(chunks))
 
     if not all_chunks:
         logger.warning("没有可摄入的内容，跳过重建")
         return 0
 
+    # 全量重建：docstore 与 Qdrant 同步清理重灌
+    docstore.clear_kb(kb_id)
     rebuild(kb_id, all_chunks)
-    logger.info("摄入完成，共 %d 个 chunk（全量重建）", len(all_chunks))
+    logger.info("摄入完成，共 %d 个子 chunk（全量重建）", len(all_chunks))
     return len(all_chunks)
+
+
+def run_ingest(kb_id: str, path: Path) -> int:
+    """同步入口（CLI 调用）：内部跑 asyncio。"""
+    return asyncio.run(ingest_path(kb_id, path))

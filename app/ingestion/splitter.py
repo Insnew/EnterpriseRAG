@@ -22,4 +22,11 @@ def get_splitter() -> RecursiveCharacterTextSplitter:
 
 
 def split_documents(docs: list[Document]) -> list[Document]:
-    return get_splitter().split_documents(docs)
+    """切分入口：表格原子化——chunk_kind="table" 的 Document 原样保留，永不切开。
+
+    M6 起 Excel/PDF 表格会被 loader 标记为 chunk_kind="table"，
+    在这里分流：表格直接放行，普通文本走 400 字切分。
+    """
+    tables = [d for d in docs if d.metadata.get("chunk_kind") == "table"]
+    normal = [d for d in docs if d.metadata.get("chunk_kind") != "table"]
+    return get_splitter().split_documents(normal) + tables

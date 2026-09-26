@@ -16,6 +16,7 @@ from app.llm.chat import get_chat_model
 from app.llm.rerank import rerank
 from app.rag.prompts import JUDGE_PROMPT, RAG_PROMPT, REWRITE_PROMPT
 from app.rag.state import GraphState
+from app.retrieval.parent_retriever import retrieve_parents
 from app.retrieval.rewrite import search_with_rewrite
 
 # 粗召回宽度与重排截断数（两阶段检索：宽进窄出）
@@ -69,15 +70,19 @@ async def retrieve_node(state: GraphState) -> dict:
 
     M5 起是两阶段检索的第一阶段（粗排）：宁可多捞不漏，
     排序质量交给 rerank 节点修准。
+
+    M6 起召回后做父子替换：子 chunk 命中 → 换回父文档（完整段落），
+    下游 rerank/judge/generate 读到的是完整上下文而非碎片。
     """
     kb_id = state.get("kb_id", "default")
-    docs = search_with_rewrite(
+    child_docs = search_with_rewrite(
         rewritten=state["rewritten_question"],
         original=state["question"],
         kb_id=kb_id,
         top_k=CANDIDATE_K,
     )
-    logger.info("粗召回 %d 个候选", len(docs))
+    docs = retrieve_parents(kb_id, child_docs, top_n=CANDIDATE_K)
+    logger.info("粗召回 %d 个子 chunk，父文档替换后 %d 个候选", len(child_docs), len(docs))
     return {"docs": docs}
 
 

@@ -13,7 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.core.logging import setup_logging
-from app.ingestion.pipeline import ingest_path
+from app.ingestion.pipeline import run_ingest
 
 setup_logging()
 
@@ -27,7 +27,7 @@ def main() -> None:
     target = Path(args.path)
     if not target.exists():
         parser.error(f"路径不存在: {target}")
-    ingest_path(args.kb_id, target)
+    run_ingest(args.kb_id, target)
 
 
 if __name__ == "__main__":
