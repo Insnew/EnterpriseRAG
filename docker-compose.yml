@@ -1,4 +1,4 @@
-# 本地基础设施编排（M3：仅 Qdrant；M7 将加入 Postgres 与 Langfuse）
+# 本地基础设施编排（M3：Qdrant；M7：加 api/ui 服务，一键起全套）
 # 用法：docker compose up -d
 services:
   qdrant:
@@ -15,6 +15,48 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
+  api:
+    build: .
+    image: enterprise-rag
+    container_name: enterprise-rag-api
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000" # API 文档见 http://localhost:8000/docs
+    env_file: .env # 两个模型 key 等配置
+    environment:
+      # 容器内网访问 Qdrant 用服务名，覆盖 .env 里的 localhost
+      QDRANT_URL: http://qdrant:6333
+    volumes:
+      - ./data:/app/data # docstore.db / context_cache.db 持久化到宿主机
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      # slim 镜像无 curl，用 python 探 /health
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ui:
+    build: .
+    image: enterprise-rag
+    container_name: enterprise-rag-ui
+    command: uv run streamlit run ui/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501" # 浏览器打开 http://localhost:8501
+    environment:
+      API_BASE: http://api:8000 # UI 服务端进程经内网调 API
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    depends_on:
+      - api
 
 volumes:
   qdrant_data:

@@ -1,0 +1,13 @@
+# 构建上下文排除清单：这些不进镜像（.gitignore 的同款逻辑，作用域是 docker build）
+.venv/
+.git/
+data/
+.env
+__pycache__/
+*.pyc
+references/
+.idea/
+tests/
+.github/
+*.db
+ragas_*.log

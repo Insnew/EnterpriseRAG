@@ -1,8 +1,8 @@
 # EnterpriseRAG — 企业级智能知识库问答系统
 
-面向企业内部文档的 RAG 知识库问答系统：多格式文档自动入库 → 查询改写 + 混合检索 + 重排 → 多轮对话 → SSE 流式输出 → 引用溯源。可评测（RAGAS）、可观测（Langfuse）、Docker 一键部署。
+面向企业内部文档的 RAG 知识库问答系统：多格式文档自动入库 → 查询改写 + 混合检索 + 重排 → 多轮对话 → SSE 流式输出 → 引用溯源。可评测（检索指标 + RAGAS）、Docker 一键部署。
 
-> 项目状态：🚧 开发中（M1：项目骨架 + 朴素 RAG 链路）
+> 项目状态：✅ 核心功能完成（M1-M7 全链路 + 检索/生成双评测 + Docker 一键部署）
 
 ## 架构
 
@@ -19,7 +19,6 @@ flowchart LR
     DOCS[PDF/Word/Excel/MD] --> INGEST[解析 → 切分 → 入库]
     INGEST --> DB[(向量库 + 元数据)]
     DB --> RETRIEVE
-    RETRIEVE -.-> OBS[Langfuse 可观测]
     EVAL[RAGAS + 检索指标评测] -.-> GRAPH
 ```
 
@@ -32,7 +31,7 @@ flowchart LR
 | 向量库 | Chroma（MVP）→ Qdrant（混合检索阶段） |
 | 编排 | LangChain 1.x（LCEL）+ LangGraph |
 | 后端 / UI | FastAPI / Streamlit |
-| 评测 / 可观测 | RAGAS / Langfuse（自托管） |
+| 评测 | RAGAS 0.4.3（四指标）+ 自研检索评测脚本 |
 | 部署 | Docker Compose |
 
 ## 检索指标表（每次里程碑更新）
@@ -44,7 +43,33 @@ flowchart LR
 | M5 | +重排 +拒答 | 1.000 | 0.918* | 1.000 | 拒答 4/4；*检索层指标不含重排（重排收益待 M7 端到端评测） |
 | M6 | +Contextual Chunking +父子检索 | 0.980 | 0.820 | 0.980 | 检索层指标（不含rerank）；父子检索收益端到端测（M7 RAGAS） |
 
+## 生成质量指标（RAGAS，M7）
+
+30 题分层抽样端到端评测（跑完整 LangGraph 图；judge: deepseek-chat，自评存在共模偏差）：
+
+| 指标 | 分数 | 大白话 |
+|---|---|---|
+| Faithfulness（忠实度） | **0.884** | 答案陈述有原文依据的比例（防幻觉） |
+| AnswerRelevancy（答案相关性） | **0.830** | 答案紧扣问题的程度 |
+| SemanticSimilarity（语义相似度） | **0.786** | 与标准答案的语义接近度 |
+| ContextPrecision（上下文精确度） | **0.922** | 喂给 LLM 的上下文贡献密度 |
+
+- ContextPrecision 0.922 端到端验证了父子检索收益：检索层 MRR 波动（M5 0.918 → M6 0.820）未传导到生成层
+- 已知短板：table 题型 AnswerRelevancy 0.635——检索全对（Recall 1.0）但多行数值答案生成不全，列为后续优化方向
+- 评测脚本：`uv run python eval/ragas_eval.py`（结果落盘 eval/results/ragas_results.json）
+
 ## 快速开始
+
+**Docker 一键部署（推荐）**：
+
+```bash
+docker compose up -d                         # 三容器：qdrant + api + ui，健康检查自动等待
+uv run python scripts/ingest.py default samples/   # 摄入演示文档（宿主机执行）
+# 浏览器打开 http://localhost:8501 提问；API 文档 http://localhost:8000/docs
+```
+
+> 国内网络已内置加速：基础镜像走 1panel 加速站、依赖走阿里云 PyPI 镜像。
+> 国外网络可覆盖：`docker compose build --build-arg BASE_IMAGE=python:3.12-slim`
 
 > **Windows 小白模式（推荐）**：双击三个脚本即可——
 > ① `scripts\setup_env.bat`（自动创建 .env 并打开记事本，填入两个 key）

@@ -7,11 +7,13 @@ M4：改为 httpx.stream 接收 SSE（打字机效果），客户端维护最近
 """
 
 import json
+import os
 
 import httpx
 import streamlit as st
 
-API_BASE = "http://localhost:8000"
+# 容器部署时 compose 注入 API_BASE=http://api:8000（容器内网域名），本地开发用默认值
+API_BASE = os.getenv("API_BASE", "http://localhost:8000")
 MAX_HISTORY = 6  # 最近 3 轮（6 条消息）传给后端做指代消解
 
 st.set_page_config(page_title="EnterpriseRAG 知识库问答", page_icon="📚")

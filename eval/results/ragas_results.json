@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-27",
+  "n": 30,
+  "metrics": {
+    "faithfulness": 0.884,
+    "answer_relevancy": 0.83,
+    "semantic_similarity": 0.786,
+    "context_precision_with_reference": 0.922
+  },
+  "by_category": {
+    "cross_doc": {
+      "faithfulness": 0.785,
+      "answer_relevancy": 0.924,
+      "semantic_similarity": 0.914,
+      "context_precision_with_reference": 0.778
+    },
+    "exact": {
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.948,
+      "semantic_similarity": 0.678,
+      "context_precision_with_reference": 1.0
+    },
+    "fact": {
+      "faithfulness": 0.942,
+      "answer_relevancy": 0.895,
+      "semantic_similarity": 0.829,
+      "context_precision_with_reference": 0.983
+    },
+    "multi_hop": {
+      "faithfulness": 0.938,
+      "answer_relevancy": 0.837,
+      "semantic_similarity": 0.882,
+      "context_precision_with_reference": 0.875
+    },
+    "table": {
+      "faithfulness": 0.75,
+      "answer_relevancy": 0.635,
+      "semantic_similarity": 0.705,
+      "context_precision_with_reference": 0.875
+    }
+  }
+}
